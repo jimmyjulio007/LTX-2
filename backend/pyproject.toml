@@ -1,0 +1,19 @@
+[project]
+name = "ltx-backend"
+version = "0.1.0"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlmodel",
+    "psycopg2-binary",
+    "httpx",
+    "websockets",
+    "python-dotenv",
+    "python-multipart",
+    "pydantic-settings",
+    "boto3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
