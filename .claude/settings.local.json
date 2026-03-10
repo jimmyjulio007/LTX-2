@@ -17,7 +17,8 @@
       "Bash(git add --renormalize frontend/public/apple-touch-icon.png frontend/public/favicon.png frontend/public/og-image.png frontend/public/images/login-bg.png frontend/public/images/signup-bg.png)",
       "Bash(git stash)",
       "Bash(git lfs migrate export --include=\"*.png,*.jpg,*.jpeg,*.webp,*.gif\" --everything)",
-      "Bash(git stash pop)"
+      "Bash(git stash pop)",
+      "Bash(git check-ignore frontend/src/shared/generated/prisma/client/index.ts)"
     ],
     "additionalDirectories": [
       "C:\\Users\\JULIO\\LTX-2\\frontend\\src\\app\\[locale]\\(user)"

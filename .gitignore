@@ -19,6 +19,10 @@ checkpoints/
 .DS_Store
 tmp
 .wandb
+.env
+.env.*
+!.env.example
+
 
 # Model checkpoints
 *.ckpt
