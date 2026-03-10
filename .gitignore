@@ -13,12 +13,13 @@ checkpoints/
 
 # IDE settings
 .idea/
-.vscode/
 
 # Other files
 .DS_Store
 tmp
 .wandb
+!.env.example
+
 
 # Model checkpoints
 *.ckpt
@@ -49,3 +50,5 @@ tmp
 !frontend/**/*.webp
 !frontend/**/*.svg
 !frontend/**/*.ico
+config.bat
+node_modules
