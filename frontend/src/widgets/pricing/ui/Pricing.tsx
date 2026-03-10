@@ -14,27 +14,27 @@ if (typeof window !== "undefined") {
 
 const TIERS = [
   {
-    name: "Personal",
-    tier: "ENTRY",
+    nameKey: "personal" as const,
+    tierKey: "entry" as const,
     price: 0,
-    features: ["5 Render Credits", "1080p Export", "Personal Use"],
-    button: "Select Tier",
+    featureKeys: ["feature5Credits", "feature1080p", "featurePersonalUse"] as const,
+    buttonKey: "selectTier" as const,
     popular: false,
   },
   {
-    name: "Professional",
-    tier: "RECOMMENDED",
+    nameKey: "professional" as const,
+    tierKey: "recommended" as const,
     price: 29,
-    features: ["200 Render Credits", "4K Ultra HD Output", "Commercial License", "Priority Queue"],
-    button: "Begin Pro",
+    featureKeys: ["feature200Credits", "feature4K", "featureCommercial", "featurePriority"] as const,
+    buttonKey: "beginPro" as const,
     popular: true,
   },
   {
-    name: "Studio",
-    tier: "ENTERPRISE",
+    nameKey: "studio" as const,
+    tierKey: "enterprise" as const,
     price: 99,
-    features: ["Unlimited Credits", "Custom Training", "Multi-Seat Access"],
-    button: "Contact Sales",
+    featureKeys: ["featureUnlimited", "featureTraining", "featureMultiSeat"] as const,
+    buttonKey: "contactSales" as const,
     popular: false,
   },
 ];
@@ -296,8 +296,8 @@ export const Pricing = () => {
       <div className="container px-4 sm:px-6 mx-auto text-center relative z-10">
         <div className="pricing-heading mb-12 md:mb-20">
           <h2 id="pricing-heading" className="pricing-heading-title text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-[-0.03em] mb-4 md:mb-5" style={{ perspective: "800px" }}>
-            <span className="text-white">Subscription </span>
-            <span className="font-display italic text-[#eab308]">Tiers</span>
+            <span className="text-white">{t("title")} </span>
+            <span className="font-display italic text-[#eab308]">{t("titleAccent")}</span>
           </h2>
           <p className="pricing-heading-desc text-slate-500 max-w-xl mx-auto text-xs sm:text-sm font-medium leading-relaxed">
             {t("description")}
@@ -307,8 +307,8 @@ export const Pricing = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 max-w-6xl mx-auto items-stretch">
           {TIERS.map((tier) => (
             <article
-              key={tier.name}
-              aria-label={`${tier.name} plan - $${tier.price} per month`}
+              key={tier.nameKey}
+              aria-label={`${t(tier.nameKey)} - $${tier.price} / ${t("month")}`}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               className={cn(
@@ -336,7 +336,7 @@ export const Pricing = () => {
                   <span className="popular-badge-shine absolute inset-0 bg-gradient-to-r from-transparent via-[#eab308]/20 to-transparent -translate-x-full pointer-events-none" />
                   <span className="relative z-10 flex items-center gap-1.5">
                     <Zap className="w-3 h-3" />
-                    Most Popular
+                    {t("mostPopular")}
                   </span>
                 </span>
               )}
@@ -350,10 +350,10 @@ export const Pricing = () => {
                   "text-[10px] font-black uppercase tracking-[0.3em]",
                   tier.popular ? "text-[#eab308]" : "text-slate-500"
                 )}>
-                  {tier.tier}
+                  {t(tier.tierKey)}
                 </span>
 
-                <h3 className="text-white text-xl font-bold mt-2">{tier.name}</h3>
+                <h3 className="text-white text-xl font-bold mt-2">{t(tier.nameKey)}</h3>
 
                 <div className="flex items-baseline mt-3 sm:mt-4 mb-6 sm:mb-8">
                   <span className="text-4xl sm:text-5xl font-black tracking-tighter text-white">
@@ -373,16 +373,16 @@ export const Pricing = () => {
                 )} />
 
                 <div className="space-y-4 sm:space-y-5 mb-6 sm:mb-8 flex-1">
-                  {tier.features.map((feature) => (
+                  {tier.featureKeys.map((featureKey) => (
                     <div
-                      key={feature}
+                      key={featureKey}
                       className="pricing-feature flex items-center space-x-3 text-sm font-medium text-slate-400"
                     >
                       <Check className={cn(
                         "pricing-check w-4 h-4 shrink-0",
                         tier.popular ? "text-[#eab308]" : "text-[#eab308]/60"
                       )} />
-                      <span>{feature}</span>
+                      <span>{t(featureKey)}</span>
                     </div>
                   ))}
                 </div>
@@ -397,7 +397,7 @@ export const Pricing = () => {
                       : "btn-ghost"
                   )}
                 >
-                  <span className="relative z-10">{tier.button}</span>
+                  <span className="relative z-10">{t(tier.buttonKey)}</span>
                 </button>
               </div>
             </article>

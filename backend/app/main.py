@@ -1,7 +1,7 @@
 import os
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Request, Depends, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -12,10 +12,9 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
 from .config import settings
-from .models import VideoJob, JobStatus, User
+from .models import VideoJob, JobStatus, User, Session as SessionModel
 from .dependencies import engine, get_session
 from .api.v1.router import api_router
-from .core.security import verify_token
 
 # Initialisation
 logging.basicConfig(level=logging.INFO)
@@ -33,17 +32,25 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Middlewares
-origins = settings.ALLOWED_ORIGINS.split(",")
+# Splitting origins and cleaning up whitespace
+origins = [origin.strip() for origin in settings.ALLOWED_ORIGINS.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_credentials=True, # Indispensable pour Better Auth (Cookies)
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Routes
 app.include_router(api_router)
+
+@app.on_event("startup")
+def on_startup():
+    from .models import SQLModel
+    SQLModel.metadata.create_all(engine)
+    logger.info("Database tables verified/created.")
 
 class ConnectionManager:
     def __init__(self):
@@ -66,7 +73,11 @@ manager = ConnectionManager()
 
 @app.get("/health", tags=["Infrastructure"])
 async def health():
-    return {"status": "ok", "version": "2.1.0", "timestamp": datetime.utcnow().isoformat()}
+    return {
+        "status": "ok", 
+        "version": "2.1.0", 
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
 
 @app.post("/webhook/runpod", tags=["Infrastructure"])
 async def runpod_webhook(data: dict, token: str, session: Session = Depends(get_session)):
@@ -80,22 +91,52 @@ async def runpod_webhook(data: dict, token: str, session: Session = Depends(get_
             job.video_url = data.get("output", {}).get("video_url")
             job.progress = 100
         else:
+            # Store failure reason from RunPod
+            error_msg = data.get("error") or data.get("output", {}).get("error", "Unknown GPU error")
+            job.failure_reason = str(error_msg)[:500]
+            # Refund credits on failure
             user = session.get(User, job.user_id)
             if user: user.credits += job.cost; session.add(user)
         session.add(job); session.commit()
-        await manager.broadcast(job.id, {"progress": job.progress, "status": job.status, "video_url": job.video_url})
+        await manager.broadcast(job.id, {
+            "progress": job.progress,
+            "status": job.status,
+            "video_url": job.video_url,
+            "failure_reason": job.failure_reason,
+        })
+        # Publish to Redis for other services (email notifications, etc.)
+        try:
+            from .core.redis_client import redis_client
+            redis_client.publish(f"job:{job.id}", json.dumps({
+                "status": job.status,
+                "video_url": job.video_url,
+                "user_id": job.user_id,
+            }))
+        except Exception:
+            pass  # Redis publish is best-effort
     return {"status": "ok"}
 
 @app.websocket("/ws/progress/{job_id}")
 async def websocket_progress(websocket: WebSocket, job_id: str, token: str = Query(...)):
-    """WebSocket sécurisé : vérifie le JWT et la propriété du job."""
+    """
+    WebSocket sécurisé : vérifie la session Better Auth et la propriété du job.
+    """
     try:
-        user_id = verify_token(token)
-        # On vérifie avec une session fraîche
         with Session(engine) as session:
+            # 1. Valider le token de session
+            statement = select(SessionModel).where(SessionModel.token == token)
+            session_record = session.exec(statement).first()
+            
+            if not session_record or session_record.expiresAt < datetime.now(timezone.utc).replace(tzinfo=None):
+                await websocket.close(code=4001) # Policy Violation / Expired
+                return
+            
+            user_id = session_record.userId
+            
+            # 2. Vérifier la propriété du job
             job = session.get(VideoJob, job_id)
             if not job or job.user_id != user_id:
-                await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+                await websocket.close(code=4001)
                 return
                 
         await manager.connect(job_id, websocket)

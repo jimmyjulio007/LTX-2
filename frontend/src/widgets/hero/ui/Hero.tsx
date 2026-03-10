@@ -453,15 +453,15 @@ export const Hero = () => {
               <div className="flex items-center space-x-3 md:space-x-6 text-[8px] md:text-[10px] font-bold tracking-[0.15em] md:tracking-[0.2em] text-white/60">
                 <span className="flex items-center gap-1.5 md:gap-2">
                   <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-[#eab308] animate-pulse" />
-                  4K RENDER
+                  {t("render4K")}
                 </span>
                 <span className="hidden sm:flex items-center gap-1.5 md:gap-2">
                   <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-[#eab308] animate-pulse" />
-                  PHYSICAL LIGHTING ENGINE
+                  {t("physicalLighting")}
                 </span>
               </div>
               <span className="text-[8px] md:text-[10px] font-bold tracking-[0.15em] md:tracking-[0.2em] text-white/40">
-                0:15 | 24FPS
+                {t("fpsInfo")}
               </span>
             </div>
           </div>

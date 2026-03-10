@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useTransition, useRef, useCallback } from 'react';
+import { useState, useEffect, useTransition, useRef, useCallback } from 'react';
 import { Layout, Globe } from 'lucide-react';
 import gsap from 'gsap';
 import { cn } from '@/shared/lib/utils';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, useRouter, usePathname } from '@/i18n/routing';
 import { routing } from '@/i18n/routing';
+import { useSession, signOut, isAdmin } from '@/shared/lib/auth-client';
 
 const LOCALE_LABELS: Record<string, string> = {
   en: 'EN',
@@ -19,7 +20,7 @@ const MenuToggle = ({ isOpen, toggle }: { isOpen: boolean; toggle: () => void })
     className="lg:hidden relative w-11 h-11 flex items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.03] active:bg-white/[0.06] transition-colors cursor-pointer"
     onClick={toggle}
     aria-expanded={isOpen}
-    aria-label={isOpen ? "Close menu" : "Open menu"}
+    aria-label={isOpen ? useTranslations('Navbar')("closeMenu") : useTranslations('Navbar')("openMenu")}
   >
     <div className="w-[22px] h-[22px] relative">
       <span
@@ -54,6 +55,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { data: session } = useSession();
   const navRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
 
@@ -112,30 +114,6 @@ export default function Navbar() {
     });
   }, []);
 
-  // Magnetic effect for CTA button
-  const handleMagneticMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const btn = e.currentTarget;
-    const rect = btn.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-
-    gsap.to(btn, {
-      x: x * 0.2,
-      y: y * 0.2,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  }, []);
-
-  const handleMagneticLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    gsap.to(e.currentTarget, {
-      x: 0,
-      y: 0,
-      duration: 0.5,
-      ease: "elastic.out(1, 0.3)",
-    });
-  }, []);
-
   const switchLocale = (newLocale: string) => {
     setLangMenuOpen(false);
     setMobileMenuOpen(false);
@@ -145,10 +123,11 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { name: t('features'), href: '#features' },
     { name: t('showcase'), href: '#showcase' },
     { name: t('pricing'), href: '#pricing' },
-    { name: t('enterprise'), href: '#enterprise' },
+    { name: t('gallery'), href: '/gallery', isRoute: true },
+    { name: t('marketplace'), href: '/marketplace', isRoute: true },
+    { name: t('apiDocs'), href: '/api-docs', isRoute: true },
   ];
 
   return (
@@ -191,22 +170,28 @@ export default function Navbar() {
 
           {/* Desktop nav links */}
           <div className="hidden lg:flex items-center space-x-12">
-            {navLinks.map((link, i) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className={cn(
-                  "relative text-[13px] font-bold uppercase tracking-widest text-slate-400 hover:text-[#eab308] transition-all duration-300 group",
-                  mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2.5"
-                )}
-                style={{
-                  transitionDelay: mounted ? `${0.4 + i * 0.08}s` : '0s',
-                }}
-              >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-[#eab308] to-[#facc15] group-hover:w-full transition-all duration-300" />
-              </a>
-            ))}
+            {navLinks.map((link, i) => {
+              const className = cn(
+                "relative text-[13px] font-bold uppercase tracking-widest text-slate-400 hover:text-[#eab308] transition-all duration-300 group",
+                mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2.5"
+              );
+              const style = { transitionDelay: mounted ? `${0.4 + i * 0.08}s` : '0s' };
+              const inner = (
+                <>
+                  {link.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-[#eab308] to-[#facc15] group-hover:w-full transition-all duration-300" />
+                </>
+              );
+              return link.isRoute ? (
+                <Link key={link.name} href={link.href} className={className} style={style}>
+                  {inner}
+                </Link>
+              ) : (
+                <a key={link.name} href={link.href} className={className} style={style}>
+                  {inner}
+                </a>
+              );
+            })}
           </div>
 
           {/* Desktop actions */}
@@ -230,7 +215,7 @@ export default function Navbar() {
                     ? "text-[#eab308] border-[#eab308]/20 bg-[#eab308]/[0.06]"
                     : "text-slate-400 border-transparent hover:text-white hover:bg-white/[0.04]"
                 )}
-                aria-label="Switch language"
+                aria-label={t("switchLanguage")}
                 aria-expanded={langMenuOpen}
               >
                 <Globe className={cn("w-3.5 h-3.5 transition-transform duration-300", langMenuOpen && "rotate-180")} />
@@ -269,30 +254,72 @@ export default function Navbar() {
               </div>
             </div>
 
-            <button
-              className={cn(
-                "text-[13px] font-bold uppercase tracking-widest text-white/70 hover:text-[#eab308] transition-all duration-300 cursor-pointer",
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2.5"
-              )}
-              style={{ transitionDelay: mounted ? '0.75s' : '0s' }}
-            >
-              {t('login')}
-            </button>
-            <button
-              className={cn(
-                "px-8 py-3 rounded-lg btn-gold text-[12px] shadow-[0_0_20px_rgba(234,179,8,0.15)] active:scale-95 transition-all cursor-pointer",
-                mounted ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-2.5 scale-90"
-              )}
-              style={{
-                transitionDelay: mounted ? '0.8s' : '0s',
-                transitionDuration: '0.5s',
-                transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-              }}
-              onMouseMove={handleMagneticMove}
-              onMouseLeave={handleMagneticLeave}
-            >
-              <span className="relative z-10">{t('getStarted')}</span>
-            </button>
+            {session ? (
+              <>
+                {isAdmin(session.user) && (
+                  <Link
+                    href="/admin"
+                    className={cn(
+                      "px-4 py-2 rounded-lg text-[10px] font-black tracking-[0.2em] uppercase text-[#eab308] border border-[#eab308]/20 bg-[#eab308]/[0.05] hover:bg-[#eab308]/[0.1] transition-all",
+                      mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2.5"
+                    )}
+                    style={{ transitionDelay: mounted ? '0.72s' : '0s' }}
+                  >
+                    Admin
+                  </Link>
+                )}
+                <Link
+                  href="/dashboard"
+                  className={cn(
+                    "px-6 py-3 rounded-lg btn-ghost text-[12px] active:scale-95 transition-all inline-block",
+                    mounted ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-2.5 scale-90"
+                  )}
+                  style={{ transitionDelay: mounted ? '0.75s' : '0s' }}
+                >
+                  {t('dashboard')}
+                </Link>
+                <button
+                  onClick={async () => {
+                    await signOut();
+                    router.refresh();
+                  }}
+                  className={cn(
+                    "px-8 py-3 rounded-lg btn-gold text-[12px] shadow-[0_0_20px_rgba(234,179,8,0.15)] active:scale-95 transition-all inline-block cursor-pointer",
+                    mounted ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-2.5 scale-90"
+                  )}
+                  style={{ transitionDelay: mounted ? '0.8s' : '0s' }}
+                >
+                  {t('signOut')}
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className={cn(
+                    "text-[13px] font-bold uppercase tracking-widest text-white/70 hover:text-[#eab308] transition-all duration-300",
+                    mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2.5"
+                  )}
+                  style={{ transitionDelay: mounted ? '0.75s' : '0s' }}
+                >
+                  {t('login')}
+                </Link>
+                <Link
+                  href="/signup"
+                  className={cn(
+                    "px-8 py-3 rounded-lg btn-gold text-[12px] shadow-[0_0_20px_rgba(234,179,8,0.15)] active:scale-95 transition-all inline-block",
+                    mounted ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-2.5 scale-90"
+                  )}
+                  style={{
+                    transitionDelay: mounted ? '0.8s' : '0s',
+                    transitionDuration: '0.5s',
+                    transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  }}
+                >
+                  <span className="relative z-10">{t('getStarted')}</span>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile hamburger */}
@@ -340,34 +367,41 @@ export default function Navbar() {
           <div className="px-6 sm:px-8 pt-8 pb-6">
             {/* Nav links */}
             <div className="space-y-1">
-              {navLinks.map((link, i) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    "flex items-center justify-between py-4 px-3 -mx-3 rounded-xl text-lg sm:text-xl font-bold uppercase tracking-widest text-white/90 hover:text-[#eab308] hover:bg-white/[0.02] transition-all active:text-[#eab308] active:bg-white/[0.04] group",
-                    mobileMenuOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-[30px]"
-                  )}
-                  style={{
-                    transitionDelay: mobileMenuOpen ? `${0.1 + i * 0.06}s` : `${i * 0.03}s`,
-                    transitionDuration: mobileMenuOpen ? '0.4s' : '0.2s',
-                    transitionProperty: 'all',
-                    filter: mobileMenuOpen ? 'blur(0px)' : 'blur(8px)',
-                  }}
-                >
-                  <span className="flex items-center gap-4">
-                    <span className="w-1 h-1 rounded-full bg-[#eab308]/40 group-hover:bg-[#eab308] group-active:bg-[#eab308] transition-colors" />
-                    {link.name}
-                  </span>
-                  <svg
-                    width="16" height="16" viewBox="0 0 16 16" fill="none"
-                    className="text-slate-600 group-hover:text-[#eab308] group-active:text-[#eab308] transition-all group-hover:translate-x-1"
-                  >
-                    <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </a>
-              ))}
+              {navLinks.map((link, i) => {
+                const className = cn(
+                  "flex items-center justify-between py-4 px-3 -mx-3 rounded-xl text-lg sm:text-xl font-bold uppercase tracking-widest text-white/90 hover:text-[#eab308] hover:bg-white/[0.02] transition-all active:text-[#eab308] active:bg-white/[0.04] group",
+                  mobileMenuOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-[30px]"
+                );
+                const style = {
+                  transitionDelay: mobileMenuOpen ? `${0.1 + i * 0.06}s` : `${i * 0.03}s`,
+                  transitionDuration: mobileMenuOpen ? '0.4s' : '0.2s',
+                  transitionProperty: 'all' as const,
+                  filter: mobileMenuOpen ? 'blur(0px)' : 'blur(8px)',
+                };
+                const inner = (
+                  <>
+                    <span className="flex items-center gap-4">
+                      <span className="w-1 h-1 rounded-full bg-[#eab308]/40 group-hover:bg-[#eab308] group-active:bg-[#eab308] transition-colors" />
+                      {link.name}
+                    </span>
+                    <svg
+                      width="16" height="16" viewBox="0 0 16 16" fill="none"
+                      className="text-slate-600 group-hover:text-[#eab308] group-active:text-[#eab308] transition-all group-hover:translate-x-1"
+                    >
+                      <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </>
+                );
+                return link.isRoute ? (
+                  <Link key={link.name} href={link.href} onClick={() => setMobileMenuOpen(false)} className={className} style={style}>
+                    {inner}
+                  </Link>
+                ) : (
+                  <a key={link.name} href={link.href} onClick={() => setMobileMenuOpen(false)} className={className} style={style}>
+                    {inner}
+                  </a>
+                );
+              })}
             </div>
 
             {/* Divider */}
@@ -386,7 +420,7 @@ export default function Navbar() {
               }}
             >
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 mb-3 px-1">
-                {t('features') === 'Fonctionnalités' ? 'LANGUE' : 'LANGUAGE'}
+                {t('language')}
               </p>
               <div className="flex gap-3">
                 {routing.locales.map((loc) => (
@@ -424,12 +458,41 @@ export default function Navbar() {
                 transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
               }}
             >
-              <button className="w-full py-4 rounded-xl text-center text-[13px] font-bold uppercase tracking-widest text-white/70 border border-white/[0.04] bg-white/[0.02] hover:text-white active:bg-white/[0.06] transition-all cursor-pointer">
-                {t('login')}
-              </button>
-              <button className="w-full py-4 rounded-xl btn-gold text-[13px] shadow-[0_0_30px_rgba(234,179,8,0.15)] cursor-pointer">
-                <span className="relative z-10">{t('getStarted')}</span>
-              </button>
+              {session ? (
+                <>
+                  {isAdmin(session.user) && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block w-full py-4 mb-3 rounded-xl text-center text-[11px] font-black uppercase tracking-[0.2em] text-[#eab308] border border-[#eab308]/20 bg-[#eab308]/[0.05]"
+                    >
+                      Admin Panel
+                    </Link>
+                  )}
+                  <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block w-full py-4 rounded-xl text-center text-[13px] font-bold uppercase tracking-widest text-white/70 border border-white/[0.04] bg-white/[0.02] hover:text-white active:bg-white/[0.06] transition-all">
+                    {t('dashboard')}
+                  </Link>
+                  <button
+                    onClick={async () => {
+                      setMobileMenuOpen(false);
+                      await signOut();
+                      router.refresh();
+                    }}
+                    className="block w-full py-4 rounded-xl btn-gold text-[13px] text-center shadow-[0_0_30px_rgba(234,179,8,0.15)] cursor-pointer"
+                  >
+                    {t('signOut')}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="block w-full py-4 rounded-xl text-center text-[13px] font-bold uppercase tracking-widest text-white/70 border border-white/[0.04] bg-white/[0.02] hover:text-white active:bg-white/[0.06] transition-all">
+                    {t('login')}
+                  </Link>
+                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="block w-full py-4 rounded-xl btn-gold text-[13px] text-center shadow-[0_0_30px_rgba(234,179,8,0.15)]">
+                    <span className="relative z-10">{t('getStarted')}</span>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 

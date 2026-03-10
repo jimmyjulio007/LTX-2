@@ -15,35 +15,45 @@ if (typeof window !== "undefined") {
 const ITEMS = [
   {
     id: 1,
-    title: "Ancient Echoes",
-    description: "Haunted ruins. Crumbling stairways. Stone and fog.",
+    titleKey: "item1Title" as const,
+    descKey: "item1Desc" as const,
+    altKey: "item1Alt" as const,
     image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800",
-    alt: "Ancient stone ruins shrouded in atmospheric fog",
   },
   {
     id: 2,
-    title: "Orbital Drift",
-    description: "Weightless astronauts against infinite, chaotic stormscapes.",
+    titleKey: "item2Title" as const,
+    descKey: "item2Desc" as const,
+    altKey: "item2Alt" as const,
     image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=800",
-    alt: "Astronaut floating in space with Earth's stormy atmosphere below",
   },
   {
     id: 3,
-    title: "Cold Velocity",
-    description: "Neon-soaked highways that dance matter like.",
+    titleKey: "item3Title" as const,
+    descKey: "item3Desc" as const,
+    altKey: "item3Alt" as const,
     image: "https://images.unsplash.com/photo-1493238792000-8113da705763?q=80&w=800",
-    alt: "Neon-lit highway at night with streaking lights",
   },
 ];
 
-const MARQUEE_TAGS = [
-  "Cinematic", "Photorealistic", "4K Render", "AI-Driven", "Motion Physics",
-  "Real-Time", "Neural Engine", "HDR", "Ray Tracing", "Volumetric",
-];
+
 
 export const Showcase = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("Showcase");
+
+  const marqueeTags = [
+    t("marquee.cinematic"),
+    t("marquee.photorealistic"),
+    t("marquee.render4k"),
+    t("marquee.aiDriven"),
+    t("marquee.motionPhysics"),
+    t("marquee.realTime"),
+    t("marquee.neuralEngine"),
+    t("marquee.hdr"),
+    t("marquee.rayTracing"),
+    t("marquee.volumetric"),
+  ];
 
   const rafRef = useRef(0);
 
@@ -251,8 +261,8 @@ export const Showcase = () => {
         <div className="showcase-heading flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-6 md:gap-8">
           <div>
             <h2 id="showcase-heading" className="showcase-heading-title text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-[-0.03em]">
-              <span className="text-white">Curated </span>
-              <span className="font-display italic text-[#eab308]">Showcase</span>
+              <span className="text-white">{t("title")} </span>
+              <span className="font-display italic text-[#eab308]">{t("titleAccent")}</span>
             </h2>
             <p className="showcase-heading-desc text-slate-500 mt-3 md:mt-5 max-w-xl text-xs sm:text-sm font-medium leading-relaxed">
               {t("description")}
@@ -284,7 +294,7 @@ export const Showcase = () => {
                   <Image
                     src={item.image}
                     fill
-                    alt={item.alt}
+                    alt={t(item.altKey)}
                     className="object-cover grayscale brightness-60 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-110 transition-all duration-[1.5s]"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
                   />
@@ -295,10 +305,10 @@ export const Showcase = () => {
                 <div className="absolute inset-0 p-4 sm:p-6 flex flex-col justify-end">
                   <div className="card-reveal-line h-[2px] w-12 bg-gradient-to-r from-[#eab308] to-[#facc15] mb-2 sm:mb-3 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-500" />
                   <h3 className="font-black text-base sm:text-lg uppercase tracking-tight text-white opacity-100 sm:opacity-0 sm:group-hover:opacity-100 translate-y-0 sm:translate-y-4 sm:group-hover:translate-y-0 transition-all duration-500">
-                    {item.title}
+                    {t(item.titleKey)}
                   </h3>
                   <p className="text-white/50 text-xs mt-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 translate-y-0 sm:translate-y-4 sm:group-hover:translate-y-0 transition-all duration-700 delay-100">
-                    {item.description}
+                    {t(item.descKey)}
                   </p>
                 </div>
               </div>
@@ -306,10 +316,10 @@ export const Showcase = () => {
               {/* Card info below - hidden on mobile since overlay is visible */}
               <div className="hidden sm:block mt-5 px-1">
                 <h3 className="text-white text-sm font-black uppercase tracking-wider group-hover:text-[#eab308] transition-colors duration-500">
-                  {item.title}
+                  {t(item.titleKey)}
                 </h3>
                 <p className="text-slate-600 text-xs font-medium mt-1.5 leading-relaxed">
-                  {item.description}
+                  {t(item.descKey)}
                 </p>
               </div>
             </article>
@@ -323,7 +333,7 @@ export const Showcase = () => {
             <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-black to-transparent z-10" />
             <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-black to-transparent z-10" />
             <div className="marquee-inner flex whitespace-nowrap gap-6 sm:gap-10 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] text-slate-800">
-              {[...MARQUEE_TAGS, ...MARQUEE_TAGS].map((tag, i) => (
+              {[...marqueeTags, ...marqueeTags].map((tag, i) => (
                 <span key={i} className="marquee-tag flex items-center gap-4">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#eab308]/30" />
                   {tag}
@@ -336,7 +346,7 @@ export const Showcase = () => {
             <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-black to-transparent z-10" />
             <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-black to-transparent z-10" />
             <div className="marquee-inner-reverse flex whitespace-nowrap gap-6 sm:gap-10 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] text-slate-800/50 -translate-x-1/2">
-              {[...MARQUEE_TAGS, ...MARQUEE_TAGS].reverse().map((tag, i) => (
+              {[...marqueeTags, ...marqueeTags].reverse().map((tag, i) => (
                 <span key={i} className="marquee-tag flex items-center gap-4">
                   <span className="w-1 h-1 rounded-full bg-[#eab308]/20" />
                   {tag}

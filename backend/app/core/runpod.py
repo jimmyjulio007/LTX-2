@@ -20,16 +20,32 @@ async def trigger_runpod_job(job: VideoJob, session: Session, user: User):
         "Content-Type": "application/json"
     }
     
+    # Select RunPod endpoint based on model tier
+    endpoint_id = settings.RUNPOD_ENDPOINT_ID
+    if job.model_tier == "draft" and settings.RUNPOD_ENDPOINT_DRAFT:
+        endpoint_id = settings.RUNPOD_ENDPOINT_DRAFT
+    elif job.model_tier == "premium" and settings.RUNPOD_ENDPOINT_PREMIUM:
+        endpoint_id = settings.RUNPOD_ENDPOINT_PREMIUM
+
     # Payload LTX standard
+    exclude_fields = {'created_at', 'updated_at', 'runpod_job_id', 'user', 'campaign'}
     input_data = {
-        **job.dict(exclude={'created_at', 'updated_at', 'runpod_job_id', 'user'}),
+        **job.dict(exclude=exclude_fields),
         "webhook_url": f"{os.environ.get('BASE_URL', 'http://localhost:8000')}/webhook/runpod?token={settings.RUNPOD_WEBHOOK_TOKEN}"
     }
+
+    # Include camera motion and LoRA if set
+    if job.camera_motion:
+        input_data["camera_motion"] = job.camera_motion
+    if job.motion_paths:
+        input_data["motion_paths"] = job.motion_paths
+    if job.lora_model_id:
+        input_data["lora_model_id"] = job.lora_model_id
 
     async with httpx.AsyncClient() as client:
         try:
             resp = await client.post(
-                f"https://api.runpod.ai/v2/{settings.RUNPOD_ENDPOINT_ID}/run",
+                f"https://api.runpod.ai/v2/{endpoint_id}/run",
                 headers=headers,
                 json={"input": input_data},
                 timeout=20

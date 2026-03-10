@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Layout } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -26,8 +27,8 @@ export const Footer = () => {
     {
       title: t("company"),
       links: [
-        { label: t("privacy"), href: "#" },
-        { label: t("terms"), href: "#" },
+        { label: t("privacy"), href: "/privacy", internal: true },
+        { label: t("terms"), href: "/terms", internal: true },
       ],
     },
     {
@@ -167,16 +168,26 @@ export const Footer = () => {
                   {col.title}
                 </span>
                 <div className="flex flex-col gap-2.5 sm:gap-3 text-[11px] sm:text-[12px] text-slate-600 font-medium">
-                  {col.links.map((link) => (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      className="footer-link-item footer-link hover:text-white transition-colors duration-300"
-                      {...(link.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    >
-                      {link.label}
-                    </a>
-                  ))}
+                  {col.links.map((link) =>
+                    "internal" in link && link.internal ? (
+                      <Link
+                        key={link.label}
+                        href={link.href as "/privacy" | "/terms"}
+                        className="footer-link-item footer-link hover:text-white transition-colors duration-300"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        className="footer-link-item footer-link hover:text-white transition-colors duration-300"
+                        {...(link.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      >
+                        {link.label}
+                      </a>
+                    )
+                  )}
                 </div>
               </div>
             ))}
@@ -187,7 +198,7 @@ export const Footer = () => {
         <div className="footer-separator h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
         <div className="footer-bottom py-5 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           <p className="text-[9px] sm:text-[10px] text-slate-700 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-center sm:text-left">
-            &copy; {new Date().getFullYear()} LTX AI VISUALS. ALL RIGHTS RESERVED.
+            &copy; {new Date().getFullYear()} LTX AI VISUALS. {t("allRightsReserved")}
           </p>
           <div className="flex items-center gap-5">
             <a

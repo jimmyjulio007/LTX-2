@@ -2,10 +2,10 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/widgets/navbar/ui/Navbar";
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import type { Metadata, Viewport } from 'next';
+import { ToastProvider, ToastContainer } from '@/shared/ui/toast';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -102,6 +102,8 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+import { QueryProvider } from '@/shared/api/query-provider';
+
 export default async function RootLayout({
   children,
   params
@@ -121,10 +123,12 @@ export default async function RootLayout({
     <html lang={locale} className="dark">
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased selection:bg-primary/30 text-white min-h-screen`}>
         <NextIntlClientProvider messages={messages}>
-          <Navbar />
-          <main className="pt-16 md:pt-20" role="main">
-            {children}
-          </main>
+          <QueryProvider>
+            <ToastProvider>
+              {children}
+              <ToastContainer />
+            </ToastProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

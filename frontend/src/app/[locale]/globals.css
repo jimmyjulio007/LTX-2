@@ -217,6 +217,8 @@ body {
   letter-spacing: 0.15em;
   overflow: hidden;
   transition: all 0.3s ease;
+  z-index: 0;
+  isolation: isolate;
 }
 
 .btn-gold::before {
@@ -226,6 +228,7 @@ body {
   background: linear-gradient(135deg, #facc15 0%, #eab308 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
+  z-index: -1;
 }
 
 .btn-gold:hover::before {
@@ -242,6 +245,7 @@ body {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
   opacity: 0;
   transition: opacity 0.3s ease;
+  z-index: -1;
 }
 
 .btn-gold:hover::after {

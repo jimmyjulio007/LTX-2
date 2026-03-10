@@ -94,10 +94,7 @@ export default async function Home({
       <JsonLd data={organizationSchema} />
       <JsonLd data={softwareSchema} />
       <div className="flex flex-col w-full bg-[#050505] relative">
-        {/* Film grain overlay */}
         <div className="film-grain" aria-hidden="true" />
-
-        {/* Floating gradient orbs */}
         <div className="gradient-orb gradient-orb-1" aria-hidden="true" />
         <div className="gradient-orb gradient-orb-2" aria-hidden="true" />
 
