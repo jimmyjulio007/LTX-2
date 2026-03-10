@@ -26,7 +26,7 @@ tmp
 *.safetensors
 *.sft
 
-# Media files
+# Media & data files (ML training data, large assets)
 *.gif
 *.heic
 *.heif
@@ -39,3 +39,12 @@ tmp
 *.png
 *.wav
 *.webp
+
+# Frontend exceptions - config files and assets must be tracked
+!frontend/**/*.json
+!frontend/**/*.png
+!frontend/**/*.jpg
+!frontend/**/*.jpeg
+!frontend/**/*.webp
+!frontend/**/*.svg
+!frontend/**/*.ico
