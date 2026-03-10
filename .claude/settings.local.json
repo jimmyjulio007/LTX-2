@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:3002/sitemap.xml)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(ls \"C:/Users/JULIO/LTX-2/frontend/src/app/[locale]/\\(user\\)/dashboard/\")",
+      "Bash(pnpm install)",
+      "Bash(pnpm install --frozen-lockfile)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(git status -u)",
+      "Bash(git check-ignore frontend/package.json frontend/vercel.json frontend/tsconfig.json frontend/pnpm-lock.yaml frontend/messages/en.json frontend/messages/fr.json frontend/next.config.ts)",
+      "Bash(git reset --soft HEAD~1)",
+      "Bash(git lfs untrack \"*.png\" \"*.jpg\" \"*.jpeg\" \"*.webp\" \"*.gif\")",
+      "Bash(git rm --cached frontend/public/apple-touch-icon.png frontend/public/favicon.png frontend/public/og-image.png frontend/public/images/login-bg.png frontend/public/images/signup-bg.png)",
+      "Bash(git add .gitattributes .gitignore frontend/.gitignore frontend/package.json frontend/tsconfig.json frontend/vercel.json frontend/messages/en.json frontend/messages/fr.json frontend/public/apple-touch-icon.png frontend/public/favicon.png frontend/public/og-image.png frontend/public/images/login-bg.png frontend/public/images/signup-bg.png)",
+      "Bash(git lfs ls-files)",
+      "Bash(git add --renormalize frontend/public/apple-touch-icon.png frontend/public/favicon.png frontend/public/og-image.png frontend/public/images/login-bg.png frontend/public/images/signup-bg.png)",
+      "Bash(git stash)",
+      "Bash(git lfs migrate export --include=\"*.png,*.jpg,*.jpeg,*.webp,*.gif\" --everything)",
+      "Bash(git stash pop)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\JULIO\\LTX-2\\frontend\\src\\app\\[locale]\\(user)"
+    ]
+  }
+}
