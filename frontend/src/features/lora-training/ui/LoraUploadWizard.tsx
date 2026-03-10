@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useCreateLoraModel } from "../api/use-lora";
 
@@ -108,10 +109,12 @@ export function LoraUploadWizard({ onClose }: { onClose?: () => void }) {
             <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
               {images.map((file, i) => (
                 <div key={i} className="group relative aspect-square overflow-hidden rounded-lg border border-white/[0.06]">
-                  <img
+                  <Image
                     src={URL.createObjectURL(file)}
                     alt={file.name}
-                    className="h-full w-full object-cover"
+                    fill
+                    unoptimized
+                    className="object-cover"
                   />
                   <button
                     onClick={() => handleRemoveImage(i)}

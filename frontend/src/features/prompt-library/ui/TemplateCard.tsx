@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { PromptTemplate } from "@/entities/prompt-template/model/types";
 
@@ -16,11 +17,12 @@ export function TemplateCard({ template, locale, onApply }: TemplateCardProps) {
   return (
     <div className="glass-card group relative overflow-hidden p-4 transition-all hover:border-[#eab308]/30">
       {template.thumbnail_url && (
-        <div className="mb-3 aspect-video overflow-hidden rounded-lg">
-          <img
+        <div className="relative mb-3 aspect-video overflow-hidden rounded-lg">
+          <Image
             src={template.thumbnail_url}
             alt={displayName}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            fill
+            className="object-cover transition-transform group-hover:scale-105"
           />
         </div>
       )}

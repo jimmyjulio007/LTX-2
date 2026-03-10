@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LTX-Video | Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#fbbf24", // Amber/Gold accent
+                        "background-light": "#f6f5f8",
+                        "background-dark": "#0c0a0f",
+                        "surface-dark": "#1a1625",
+                        "border-dark": "#2d2839",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.75rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<aside class="w-64 flex flex-col border-r border-border-dark bg-background-light dark:bg-background-dark">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-background-dark font-bold text-xl">L</div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-slate-100 text-base font-bold leading-none">LTX-Video</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Pro Plan</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined filled-icon">home</span>
+<span class="text-sm font-semibold">Home</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined">video_library</span>
+<span class="text-sm font-medium">My Projects</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined">folder</span>
+<span class="text-sm font-medium">Assets</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span class="text-sm font-medium">Collections</span>
+</a>
+<div class="pt-4 pb-2 px-3 text-[10px] uppercase tracking-wider text-slate-500 font-bold">Preferences</div>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+</nav>
+<div class="p-4 border-t border-border-dark">
+<button class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-primary text-background-dark font-bold text-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">upgrade</span>
+                    Upgrade Plan
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+<!-- Top Bar -->
+<header class="h-16 border-b border-border-dark flex items-center justify-between px-8 bg-background-light dark:bg-background-dark sticky top-0 z-10">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="w-full bg-slate-200 dark:bg-surface-dark border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary transition-all" placeholder="Search your generations..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-primary text-lg mr-2 filled-icon">token</span>
+<span class="text-primary font-bold text-sm">450 Credits</span>
+</div>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-px bg-border-dark mx-1"></div>
+<div class="flex items-center gap-3">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Alex Rivera</span>
+<div class="w-8 h-8 rounded-full bg-slate-300 overflow-hidden border border-border-dark">
+<img class="w-full h-full object-cover" data-alt="Profile picture of a young man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbrFR58z9x618oIF1fImF_XVRgUP0WCz573k6ZpbCn9QP8uxW6fh0h-3_eK7yo-Sumv6Rv-eMnxmaxgykbc9egz1oPpqZQOPkjgV-ZZq4gRE8FHlW6dNrCtBPyV0PVXwURyLdbINaQvS_QLJFN4v-JGA9t_JKQWPEJXQnj47zjLuEw0CqBKH6aFc8gQGeBP1xOKZpYgPpAZ-Z6Hj-r2Pqe5pr3Q0I_9lh3ArWok0bCmSgBay2Uu5xR6ma_ZU3HpcOxXUU-4oUQvP0"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content -->
+<div class="p-8 max-w-7xl mx-auto w-full">
+<!-- Quick Generate Prompt Box -->
+<section class="mb-10">
+<div class="bg-surface-dark rounded-xl border border-border-dark p-1 shadow-2xl">
+<div class="relative">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-slate-100 placeholder-slate-500 text-lg p-6 resize-none" placeholder="Describe the video you want to generate..." rows="3"></textarea>
+<div class="flex items-center justify-between px-6 pb-4">
+<div class="flex gap-4">
+<button class="flex items-center gap-1.5 text-slate-400 hover:text-primary transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-xl">auto_fix</span>
+                                        Enhance
+                                    </button>
+<button class="flex items-center gap-1.5 text-slate-400 hover:text-primary transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-xl">image</span>
+                                        Image to Video
+                                    </button>
+<button class="flex items-center gap-1.5 text-slate-400 hover:text-primary transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-xl">settings_input_component</span>
+                                        Advanced
+                                    </button>
+</div>
+<button class="bg-primary text-background-dark px-8 py-3 rounded-lg font-bold hover:scale-[1.02] transition-transform flex items-center gap-2 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-lg">bolt</span>
+                                    Generate
+                                </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats/Highlights (Optional but matching modern dashboard) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<div class="bg-surface-dark/50 p-6 rounded-xl border border-border-dark flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
+<span class="material-symbols-outlined">video_camera_front</span>
+</div>
+<div>
+<p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Total Generated</p>
+<p class="text-2xl font-bold">128</p>
+</div>
+</div>
+<div class="bg-surface-dark/50 p-6 rounded-xl border border-border-dark flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div>
+<p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Rendering Time</p>
+<p class="text-2xl font-bold">4.2 hrs</p>
+</div>
+</div>
+<div class="bg-surface-dark/50 p-6 rounded-xl border border-border-dark flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div>
+<p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Storage Used</p>
+<p class="text-2xl font-bold">12.5 GB</p>
+</div>
+</div>
+</div>
+<!-- Recent Generations Grid -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold">Recent Generations</h2>
+<button class="text-primary text-sm font-semibold hover:underline">View All</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="group relative bg-surface-dark rounded-xl border border-border-dark overflow-hidden hover:border-primary/50 transition-all">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Cinematic wide shot of misty mountains at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgRaJp5vTH67qCB9v5nCTkSQVi5oYoaAjDjJkHBiWZygIQqYec7GuBmVSEqjjW0jn5yjCVlqsHI14z6pQhzdXiyyOnNWWAeFpXwNW-Wz5Vqn5rhaAE8D7fka1nvAV0y1WC6VlUE4qZ989cQq5OGOWqjU5-_hNA9KkbMinqeXADosBpLjlutm5nNkhD_lvM82yezfupMvmzTuFBifRJraZLnNk_v-LBnaSlREuw0zvlAydvw15sQ2CNL4D655gomNj3Ay-wDGc6m5Q"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-background-dark shadow-xl shadow-primary/40 cursor-pointer">
+<span class="material-symbols-outlined filled-icon">play_arrow</span>
+</div>
+</div>
+<div class="absolute top-3 right-3 px-2 py-1 rounded bg-black/50 backdrop-blur-md text-[10px] font-bold text-white uppercase tracking-widest border border-white/10">4K Render</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-sm mb-1 truncate">Cinematic drone shot of misty mountain peaks</h3>
+<p class="text-xs text-slate-500 flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">history</span>
+                                    2 hours ago
+                                </p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative bg-surface-dark rounded-xl border border-border-dark overflow-hidden hover:border-primary/50 transition-all">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Cyberpunk city street with neon signs and flying vehicles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9er34MgVAtS1ZZ0afchf-7qxTcPNl_a5MZuffMrENsxWvXtEmhjJe80hooWcwtLJ0gAhe0TkW6vtlMsup01DQgoZmYRD6CoFz1VK2ISa0GHSvbzrKJZv-uQeh2cFnTDotwS7fdzagSLuBgNgsdptBqCUgrF3chcue8sx6xyNCrblP2ylEfMkzlV-6qAVp2y9hb7iXrrNLYvGs-x3f16VVoAiShAVwVcQeIdMFp-RaKmeha-ffIo8eyjG0ZKyCpQKMAP0F5cH_iVc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-background-dark shadow-xl shadow-primary/40 cursor-pointer">
+<span class="material-symbols-outlined filled-icon">play_arrow</span>
+</div>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-sm mb-1 truncate">Cyberpunk cityscape with neon rain reflection</h3>
+<p class="text-xs text-slate-500 flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">history</span>
+                                    5 hours ago
+                                </p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative bg-surface-dark rounded-xl border border-border-dark overflow-hidden hover:border-primary/50 transition-all">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Abstract golden liquid waves flowing in dark space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI0DeTTfHNsdaLL2pIko-WIGxWrQpYcH5dmTI4ZxzZtyq5fZDRV-BLAYM8fDzEhpbMSgyR_wIAejLpUDX2Hz1P1ri62L6T00Px56EU8TGfReFLT3tw55NUWcBtMvhXJmV9av_f30q6cELIfGa25leTHAov24cN8KJTeeTzrqAdW0pfT1Oi77ToX1W5IG-aeTDzTttnSQPcLMzlCXNWD1A6mvJClw5a72xmr76bSbU94HpoFfMl4rX5Lb8wxnvKFCEpHgDu9oXsl1I"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-background-dark shadow-xl shadow-primary/40 cursor-pointer">
+<span class="material-symbols-outlined filled-icon">play_arrow</span>
+</div>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-sm mb-1 truncate">Abstract liquid gold flowing through space</h3>
+<p class="text-xs text-slate-500 flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">history</span>
+                                    Yesterday
+                                </p>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group relative bg-surface-dark rounded-xl border border-border-dark overflow-hidden hover:border-primary/50 transition-all">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Deep ocean underwater scene with bioluminescent creatures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ0-h6FJzQ9VmjouNCWSNkItbGEhWC_7oGHXAEq1zPKLOokGSsKKMC074CIPKgZ1XLjVzp5m8XpBYdm6nEW5lHJG7aONzTRiKL8SnCfGKa3eesYYJjbYSQtdzMPxADlRsm9yMtoRZt0dATFPynQ1OmI35A6WS90Okn7HW4u14pHKNJM3EpebchnKHyXawg7PQE20dwbza1M_tYEf2eItCqoxdtP-7gkUi0fYkoRjlwxi4_9R0ikizk1jg0HRuV9PAOZr-SMua0jzw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-background-dark shadow-xl shadow-primary/40 cursor-pointer">
+<span class="material-symbols-outlined filled-icon">play_arrow</span>
+</div>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-sm mb-1 truncate">Underwater bioluminescent forest at night</h3>
+<p class="text-xs text-slate-500 flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">history</span>
+                                    2 days ago
+                                </p>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group relative bg-surface-dark rounded-xl border border-border-dark overflow-hidden hover:border-primary/50 transition-all">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Hyper-realistic close up of a futuristic robot eye" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ1zEvI93giOwbp-20RayDigcbpCZMxkFksBSBAY3lEBUFUPUdLj9vGkzIYNvdca4cK2YSK1RO-TB-uI6bgPbIq3xW1Jx0WUgVADFMKx4e8vQcR1aQ3qBeBZ-kLwqKy2h_Dl8N9awH3U5MjnNJPkRFTSxXPzhjZr4L9smssv2F_9d3FteSNVyBrbilWLXAnPi8f5n_KpK2KRmqPq5m_bpgMxbidvdQ-xAzlbk0zo0skZ_eZb3g6OCgxYeqTXSPhEKYOgyrNh7LWpk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-background-dark shadow-xl shadow-primary/40 cursor-pointer">
+<span class="material-symbols-outlined filled-icon">play_arrow</span>
+</div>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-sm mb-1 truncate">Macro shot of AI robotics eye iris</h3>
+<p class="text-xs text-slate-500 flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">history</span>
+                                    3 days ago
+                                </p>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="group relative bg-surface-dark rounded-xl border border-border-dark overflow-hidden hover:border-primary/50 transition-all">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Lush tropical jungle with rays of light peaking through" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZM9ppBOE_WlpHOe6Y-KAihiR09nTc78VcV-KBUqlYF3gDJae3m6rFL1vxQLUhuDFvrOxWeKOCIO2t0lI1s-RiJeob8Q80w16IMI_CPFEoVRum0HiiJC0K5crAO9PGR-itpfRlUz-DuVMZBfjOXV3UqnYjnBEZIc4Lkf6AGvd54VnvNsb52yZSEcRqzywfimDqOlaOzwfCtcc4DQFiL7Daid3HmwYvC0OJyPZEGBezjmXie1zTbHd-9AllgGIeK0-HfxJ8lLZBfCA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-background-dark shadow-xl shadow-primary/40 cursor-pointer">
+<span class="material-symbols-outlined filled-icon">play_arrow</span>
+</div>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-sm mb-1 truncate">Tropical jungle sunrise timelapse</h3>
+<p class="text-xs text-slate-500 flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">history</span>
+                                    5 days ago
+                                </p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

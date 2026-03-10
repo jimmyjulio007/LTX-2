@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { SubmitTemplateForm } from "@/features/marketplace/ui/SubmitTemplateForm";
@@ -145,12 +146,13 @@ export function MyTemplatesContent() {
                   className="flex items-center gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 transition-all hover:border-white/[0.1]"
                 >
                   {/* Thumbnail */}
-                  <div className="h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-white/[0.04]">
+                  <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-white/[0.04]">
                     {tpl.thumbnail_url ? (
-                      <img
+                      <Image
                         src={tpl.thumbnail_url}
                         alt={tpl.name}
-                        className="h-full w-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center">

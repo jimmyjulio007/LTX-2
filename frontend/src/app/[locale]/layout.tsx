@@ -1,11 +1,24 @@
+import { Inter, Playfair_Display } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
-import { Inter, Playfair_Display } from "next/font/google";
-import "./globals.css";
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import type { Metadata, Viewport } from 'next';
 import { ToastProvider, ToastContainer } from '@/shared/ui/toast';
+import { QueryProvider } from '@/shared/api/query-provider';
+import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  weight: ['400', '500', '600', '700', '800', '900'],
+  style: ['normal', 'italic'],
+});
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -14,18 +27,6 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
   themeColor: '#050505',
 };
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  weight: ["400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
-});
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ltx-video.com';
 
@@ -91,8 +92,8 @@ export async function generateMetadata({
       },
     },
     icons: {
-      icon: '/favicon.ico',
-      shortcut: '/favicon-16x16.png',
+      icon: '/favicon.png',
+      shortcut: '/favicon.png',
       apple: '/apple-touch-icon.png',
     },
   };
@@ -102,11 +103,9 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-import { QueryProvider } from '@/shared/api/query-provider';
-
-export default async function RootLayout({
+export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -120,8 +119,10 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className="dark">
-      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased selection:bg-primary/30 text-white min-h-screen`}>
+    <html lang={locale} className="dark" suppressHydrationWarning>
+      <body
+        className={`${inter.variable} ${playfair.variable} font-sans antialiased selection:bg-primary/30 text-white min-h-screen`}
+      >
         <NextIntlClientProvider messages={messages}>
           <QueryProvider>
             <ToastProvider>

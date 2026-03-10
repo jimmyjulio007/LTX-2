@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { SEO_PAGES } from "@/shared/data/seo-pages";
 import { routing } from "@/i18n/routing";
 
@@ -65,7 +65,7 @@ export default async function UseCasePage({
         </p>
         <div className="mt-10">
           <Link
-            href={`/${locale}/signup`}
+            href="/signup"
             className="btn-gold inline-block rounded-xl px-8 py-4 text-lg font-bold"
           >
             {t("cta")}
@@ -95,7 +95,7 @@ export default async function UseCasePage({
           <h2 className="gradient-text text-2xl font-bold">{t("ctaTitle")}</h2>
           <p className="mt-3 text-slate-400">{t("ctaDesc")}</p>
           <Link
-            href={`/${locale}/signup`}
+            href="/signup"
             className="btn-gold mt-6 inline-block rounded-xl px-8 py-3 font-bold"
           >
             {t("cta")}

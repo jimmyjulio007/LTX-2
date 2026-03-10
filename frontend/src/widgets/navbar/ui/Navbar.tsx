@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect, useTransition, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { Layout, Globe } from 'lucide-react';
 import gsap from 'gsap';
 import { cn } from '@/shared/lib/utils';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, useRouter, usePathname } from '@/i18n/routing';
 import { routing } from '@/i18n/routing';
-import { useSession, signOut, isAdmin } from '@/shared/lib/auth-client';
+import { useSession, signOut, isAdmin, getInitials } from '@/shared/lib/auth-client';
 
 const LOCALE_LABELS: Record<string, string> = {
   en: 'EN',
@@ -265,17 +266,30 @@ export default function Navbar() {
                     )}
                     style={{ transitionDelay: mounted ? '0.72s' : '0s' }}
                   >
-                    Admin
+                    {t('admin')}
                   </Link>
                 )}
                 <Link
                   href="/dashboard"
                   className={cn(
-                    "px-6 py-3 rounded-lg btn-ghost text-[12px] active:scale-95 transition-all inline-block",
+                    "flex items-center gap-2 px-6 py-3 rounded-lg btn-ghost text-[12px] active:scale-95 transition-all",
                     mounted ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-2.5 scale-90"
                   )}
                   style={{ transitionDelay: mounted ? '0.75s' : '0s' }}
                 >
+                  {session.user.image ? (
+                    <Image
+                      src={session.user.image}
+                      alt={session.user.name || ''}
+                      width={24}
+                      height={24}
+                      className="h-6 w-6 rounded-full object-cover border border-white/[0.08]"
+                    />
+                  ) : (
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#eab308] to-[#ca8a04] text-[9px] font-black text-black">
+                      {getInitials(session.user)}
+                    </span>
+                  )}
                   {t('dashboard')}
                 </Link>
                 <button
@@ -466,10 +480,23 @@ export default function Navbar() {
                       onClick={() => setMobileMenuOpen(false)}
                       className="block w-full py-4 mb-3 rounded-xl text-center text-[11px] font-black uppercase tracking-[0.2em] text-[#eab308] border border-[#eab308]/20 bg-[#eab308]/[0.05]"
                     >
-                      Admin Panel
+                      {t('adminPanel')}
                     </Link>
                   )}
-                  <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block w-full py-4 rounded-xl text-center text-[13px] font-bold uppercase tracking-widest text-white/70 border border-white/[0.04] bg-white/[0.02] hover:text-white active:bg-white/[0.06] transition-all">
+                  <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2 w-full py-4 rounded-xl text-[13px] font-bold uppercase tracking-widest text-white/70 border border-white/[0.04] bg-white/[0.02] hover:text-white active:bg-white/[0.06] transition-all">
+                    {session.user.image ? (
+                      <Image
+                        src={session.user.image}
+                        alt={session.user.name || ''}
+                        width={28}
+                        height={28}
+                        className="h-7 w-7 rounded-full object-cover border border-white/[0.08]"
+                      />
+                    ) : (
+                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#eab308] to-[#ca8a04] text-[10px] font-black text-black">
+                        {getInitials(session.user)}
+                      </span>
+                    )}
                     {t('dashboard')}
                   </Link>
                   <button

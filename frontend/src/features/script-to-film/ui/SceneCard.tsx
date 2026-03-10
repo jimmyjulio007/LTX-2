@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 export interface Scene {
@@ -62,12 +63,13 @@ export function SceneCard({ scene, onPromptChange, onGenerate, isGenerating }: S
       </div>
 
       {/* Thumbnail preview */}
-      <div className="mb-3 aspect-video overflow-hidden rounded-xl bg-black/40">
+      <div className="relative mb-3 aspect-video overflow-hidden rounded-xl bg-black/40">
         {scene.thumbnail_url ? (
-          <img
+          <Image
             src={scene.thumbnail_url}
             alt={`Scene ${scene.sceneNumber}`}
-            className="h-full w-full object-cover"
+            fill
+            className="object-cover"
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-1">

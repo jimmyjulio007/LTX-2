@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useDeleteAvatar } from "../api/use-avatars";
 import type { Avatar } from "@/entities/video-job/model/types";
@@ -18,9 +19,11 @@ export function AvatarCard({ avatar, onSchedule }: AvatarCardProps) {
       {/* Avatar header */}
       <div className="flex items-start gap-3">
         {avatar.profile_image_url ? (
-          <img
+          <Image
             src={avatar.profile_image_url}
             alt={avatar.name}
+            width={40}
+            height={40}
             className="h-10 w-10 rounded-full border border-white/[0.08] object-cover"
           />
         ) : (

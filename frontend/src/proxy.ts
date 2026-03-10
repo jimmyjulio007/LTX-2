@@ -36,38 +36,53 @@ function matchesAny(path: string, paths: string[]): boolean {
 }
 
 export default async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const path = stripLocale(pathname);
-  const locale = getLocale(pathname);
-  const sessionCookie = request.cookies.get("better-auth.session_token");
-  const isAuthenticated = !!sessionCookie;
+  try {
+    const { pathname } = request.nextUrl;
+    const path = stripLocale(pathname);
+    const locale = getLocale(pathname);
+    const sessionCookie = request.cookies.get("better-auth.session_token");
+    const isAuthenticated = !!sessionCookie;
 
-  if (isAuthenticated && matchesAny(path, AUTH_ONLY_PATHS)) {
-    return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
-  }
+    if (isAuthenticated && matchesAny(path, AUTH_ONLY_PATHS)) {
+      return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+    }
 
-  if (!matchesAny(path, PUBLIC_PATHS) && !isAuthenticated) {
-    const loginUrl = new URL(`/${locale}/login`, request.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
+    if (!matchesAny(path, PUBLIC_PATHS) && !isAuthenticated) {
+      const loginUrl = new URL(`/${locale}/login`, request.url);
+      if (pathname.startsWith("/") && !pathname.startsWith("//")) {
+        loginUrl.searchParams.set("callbackUrl", pathname);
+      }
+      return NextResponse.redirect(loginUrl);
+    }
 
-  if (matchesAny(path, ADMIN_PATHS) && isAuthenticated) {
-    const sessionCache = request.cookies.get("better-auth.session_data");
-    if (sessionCache) {
-      try {
-        const data = JSON.parse(atob(sessionCache.value.split(".")[1]));
-        const role = data?.user?.role;
-        if (role !== "ADMIN") {
-          return NextResponse.redirect(new URL(`/${locale}`, request.url));
+    if (matchesAny(path, ADMIN_PATHS) && isAuthenticated) {
+      const sessionCache = request.cookies.get("better-auth.session_data");
+      if (sessionCache) {
+        try {
+          // session_data is typically a base64 encoded JSON (part of a JWT-like structure)
+          const payload = sessionCache.value.split(".")[1];
+          if (payload) {
+            const data = JSON.parse(atob(payload));
+            const role = data?.user?.role;
+            if (role !== "ADMIN") {
+              console.warn(`[Proxy] Access denied for user role: ${role} on path: ${pathname}`);
+              return NextResponse.redirect(new URL(`/${locale}`, request.url));
+            }
+          }
+        } catch (e) {
+          console.error("[Proxy] Critical error parsing session data:", e);
+          // If cache is unreadable, let the server-side auth handle it more securely
         }
-      } catch {
-        // If cache is unreadable, let the page handle authorization
       }
     }
-  }
 
-  return intlMiddleware(request);
+    return intlMiddleware(request);
+  } catch (error) {
+    console.error("[Proxy] Unhandled error:", error);
+    // In case of a major failure, fallback to the intl middleware 
+    // to at least serve the page and let the client side handle auth if possible
+    return intlMiddleware(request);
+  }
 }
 
 export const config = {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { ShareVideo } from "@/entities/gallery/model/types";
 
@@ -41,9 +42,11 @@ export function SharePageContent({ video }: SharePageContentProps) {
 
         <div className="flex items-center gap-4">
           {video.creator.image && (
-            <img
+            <Image
               src={video.creator.image}
               alt={video.creator.name}
+              width={40}
+              height={40}
               className="h-10 w-10 rounded-full"
             />
           )}
@@ -59,9 +62,9 @@ export function SharePageContent({ video }: SharePageContentProps) {
         </div>
 
         <div className="flex items-center gap-3 text-sm text-slate-500">
-          <span>{video.likes_count} likes</span>
+          <span>{video.likes_count} {t("likes")}</span>
           <span>&#183;</span>
-          <span>{video.views_count} views</span>
+          <span>{video.views_count} {t("views")}</span>
           <span>&#183;</span>
           <span>{new Date(video.created_at).toLocaleDateString()}</span>
         </div>

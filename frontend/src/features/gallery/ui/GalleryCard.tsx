@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useToggleLike } from "../api/use-gallery";
 import type { GalleryVideo } from "@/entities/gallery/model/types";
 
@@ -20,13 +21,14 @@ export function GalleryCard({ video, locale, currentUserId }: GalleryCardProps) 
   return (
     <div className="glass-card group overflow-hidden transition-all hover:border-[#eab308]/20">
       {/* Video thumbnail / preview */}
-      <Link href={`/${locale}/v/${video.share_id}`} className="block">
+      <Link href={`/v/${video.share_id}`} className="block">
         <div className="relative aspect-video overflow-hidden">
           {video.thumbnail_url ? (
-            <img
+            <Image
               src={video.thumbnail_url}
               alt={video.title || video.prompt.slice(0, 50)}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : video.video_url ? (
             <video
@@ -81,7 +83,7 @@ export function GalleryCard({ video, locale, currentUserId }: GalleryCardProps) 
               <PublishVideoButton jobId={video.id} />
             )}
             <Link
-              href={`/${locale}/v/${video.share_id}`}
+              href={`/v/${video.share_id}`}
               className="text-xs text-[#eab308]/60 transition-colors hover:text-[#eab308]"
             >
               {t("remix")}

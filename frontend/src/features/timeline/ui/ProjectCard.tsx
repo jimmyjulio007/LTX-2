@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import type { Project } from "@/entities/video-job/model/types";
 
 interface ProjectCardProps {
@@ -23,16 +24,17 @@ export function ProjectCard({ project, clipCount, locale }: ProjectCardProps) {
 
   return (
     <Link
-      href={`/${locale}/projects/${project.id}`}
+      href={`/projects/${project.id}`}
       className="group block rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 transition-all hover:border-[#eab308]/20 hover:bg-white/[0.04]"
     >
       {/* Thumbnail */}
-      <div className="mb-3 aspect-video overflow-hidden rounded-xl bg-black/40">
+      <div className="relative mb-3 aspect-video overflow-hidden rounded-xl bg-black/40">
         {project.thumbnail_url ? (
-          <img
+          <Image
             src={project.thumbnail_url}
             alt={project.name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full items-center justify-center">

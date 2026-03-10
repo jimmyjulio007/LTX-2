@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { MarketplaceTemplate } from "@/entities/video-job/model/types";
 
@@ -44,10 +45,11 @@ export function MarketplaceCard({
             }}
           />
         ) : template.thumbnail_url ? (
-          <img
+          <Image
             src={template.thumbnail_url}
             alt={displayName}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full items-center justify-center bg-white/[0.02]">

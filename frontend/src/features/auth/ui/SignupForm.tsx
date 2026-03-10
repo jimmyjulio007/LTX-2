@@ -64,14 +64,17 @@ export default function SignupForm() {
     }
 
     showSuccess(tToast("signupSuccess"), tToast("signupSuccessDesc"));
+    // next-intl useRouter automatically handles the current locale
     router.push("/dashboard");
   };
 
   const handleSocialSignup = async (provider: "google" | "github") => {
     setSocialLoading(provider);
+    // For social login, we need to provide the full path including locale
+    const locale = window.location.pathname.split("/")[1] || "en";
     await signIn.social({
       provider,
-      callbackURL: "/dashboard",
+      callbackURL: `/${locale}/dashboard`,
     });
   };
 

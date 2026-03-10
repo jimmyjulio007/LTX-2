@@ -44,7 +44,9 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     setError(null);
-    const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl");
+    const searchParams = new URLSearchParams(window.location.search);
+    const callbackUrl = searchParams.get("callbackUrl");
+
     const { error: authError } = await signIn.email({
       email: data.email,
       password: data.password,
@@ -56,15 +58,31 @@ export default function LoginForm() {
     }
 
     showSuccess(tToast("loginSuccess"), tToast("loginSuccessDesc"));
-    router.push(callbackUrl || "/dashboard");
+
+    // Handle redirection with locale verification
+    if (callbackUrl && callbackUrl.startsWith("/")) {
+      // Strip any existing locale prefix to avoid doubling (e.g. /fr/fr/dashboard)
+      const cleanPath = callbackUrl.replace(/^\/(en|fr)/, "") || "/";
+      router.push(cleanPath);
+    } else {
+      router.push("/dashboard");
+    }
   };
 
   const handleSocialLogin = async (provider: "google" | "facebook" | "twitter") => {
     setSocialLoading(provider);
-    const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl");
+    const searchParams = new URLSearchParams(window.location.search);
+    const callbackUrl = searchParams.get("callbackUrl");
+
+    const locale = window.location.pathname.split("/")[1] || "en";
+    const targetPath = callbackUrl || "/dashboard";
+    const localizedPath = targetPath.startsWith(`/${locale}`)
+      ? targetPath
+      : `/${locale}${targetPath.startsWith("/") ? "" : "/"}${targetPath}`;
+
     await signIn.social({
       provider,
-      callbackURL: callbackUrl || "/dashboard",
+      callbackURL: localizedPath,
     });
   };
 

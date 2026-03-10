@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { ProjectClip } from "@/entities/video-job/model/types";
 
@@ -107,10 +108,11 @@ export function TimelineEditor({
               >
                 {/* Thumbnail */}
                 {clip.thumbnail_url && (
-                  <img
+                  <Image
                     src={clip.thumbnail_url}
                     alt={clip.title || `Clip ${i + 1}`}
-                    className="absolute inset-0 h-full w-full object-cover opacity-40"
+                    fill
+                    className="object-cover opacity-40"
                   />
                 )}
 
@@ -168,9 +170,11 @@ export function TimelineEditor({
               }`}
             >
               {clip.thumbnail_url && (
-                <img
+                <Image
                   src={clip.thumbnail_url}
                   alt=""
+                  width={48}
+                  height={32}
                   className="h-8 w-12 rounded object-cover"
                 />
               )}
